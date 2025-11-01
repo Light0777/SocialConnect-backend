@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Start your backend directly
-CMD ["node", "server.js"]
+CMD ["node", "server/server.js"]
