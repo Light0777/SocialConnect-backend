@@ -16,5 +16,5 @@ COPY . .
 # Expose your server port
 EXPOSE 3000
 
-# Command to start your app
-CMD ["./wait-for-mysql.sh"]
+# Start your backend directly
+CMD ["node", "server.js"]
