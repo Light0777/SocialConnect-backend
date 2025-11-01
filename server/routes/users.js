@@ -441,6 +441,9 @@ router.get("/profile", async (req, res) => {
     console.error("Profile error:", err);
     res.status(500).json({ error: "Server error" });
   }
+  console.log("🧠 Clerk Auth object:", req.auth);
+console.log("🧠 Headers:", req.headers);
+
 });
 
 // ✅ Update profile
