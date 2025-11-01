@@ -1,3 +1,5 @@
+const cors = require("cors");
+
 require("dotenv").config();
 
 console.log("Loaded Clerk Keys?", {
@@ -20,6 +22,13 @@ const sequelize = require('./db');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(cors({
+  origin: "*", // allow all origins (for testing)
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 
 // Middlewares
 app.use(express.json());
