@@ -418,33 +418,42 @@ router.post("/upload", upload.single("image"), (req, res) => {
 // ✅ Get logged-in user profile
 router.get("/profile", async (req, res) => {
   try {
+    console.log("🧠 Clerk Auth object:", req.auth);
+    console.log("🧠 Headers:", req.headers);
+
     const clerkId = req.auth?.userId;
-    if (!clerkId) return res.status(401).json({ error: "Unauthorized" });
+    if (!clerkId) {
+      console.warn("🚫 Missing Clerk ID in auth object");
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
-    let user = await User.findOne({ where: { clerkId } });
-
-    if (!user) {
-      user = await User.create({
-        clerkId,
+    // ✅ Safely find or create user (prevents duplicate clerkId errors)
+    const [user, created] = await User.findOrCreate({
+      where: { clerkId },
+      defaults: {
         username: "",
         bio: "",
         profileImg: "",
         bgImage: "",
         bgColor: "#989a9c",
         links: [],
-        social: []
-      });
+        social: [],
+      },
+    });
+
+    if (created) {
+      console.log(`✨ New user created for clerkId: ${clerkId}`);
+    } else {
+      console.log(`✅ Existing user fetched for clerkId: ${clerkId}`);
     }
 
     res.json({ user });
   } catch (err) {
-    console.error("Profile error:", err);
+    console.error("🔥 Profile error:", err);
     res.status(500).json({ error: "Server error" });
   }
-  console.log("🧠 Clerk Auth object:", req.auth);
-console.log("🧠 Headers:", req.headers);
-
 });
+
 
 // ✅ Update profile
 router.put("/profile", async (req, res) => {
