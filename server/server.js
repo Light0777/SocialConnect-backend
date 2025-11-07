@@ -54,6 +54,15 @@ app.use((req, res, next) => {
 app.use("/api/users", ClerkExpressWithAuth(), usersRoute);
 app.use("/posts", ClerkExpressWithAuth(), postRoutes);
 
+// public profile end point
+app.get("/profile/:username", async (req, res) => {
+  const { username } = req.params;
+  const user = await User.findOne({ username }); // or however you store profiles
+  if (!user) return res.status(404).json({ error: "User not found" });
+  res.json(user);
+});
+// public profile end point
+
 // MySQL Database connection + Server start
 sequelize.authenticate()
   .then(() => console.log('✅ MySQL connection successful'))
